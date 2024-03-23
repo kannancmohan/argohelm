@@ -11,6 +11,7 @@ argo-cd:
 argocd-apps:
   projects:
     - name: core
+      additionalAnnotations: {helm.sh/hook: "post-install, pre-upgrade"}
       description: Contains applications that are always deployed.
       destinations:
         - namespace: '*'
@@ -38,10 +39,11 @@ argocd-apps:
     #       kind: '*'
   applications:
     - name: root-app
-      namespace: argocd
+      namespace: default
       finalizers:
       - resources-finalizer.argocd.argoproj.io
       project: core
+      additionalAnnotations: {helm.sh/hook: "post-install, pre-upgrade"}
       source:
         # helm:
         #   valueFiles:

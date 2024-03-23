@@ -8,3 +8,133 @@ argo-cd:
   server:
     extraArgs:
       - --insecure
+argocd-apps:
+  projects:
+    - name: core
+      description: Contains applications that are always deployed.
+      destinations:
+        - namespace: '*'
+          server: '*'
+      sourceRepos:
+        - '*'
+      clusterResourceWhitelist:
+        - group: '*'
+          kind: '*'
+      namespaceResourceWhitelist:
+        - group: '*'
+          kind: '*'
+    # - name: addons
+    #   description: Contains applications that are conditionaly deployed.
+    #   destinations:
+    #     - namespace: '*'
+    #       server: '*'
+    #   sourceRepos:
+    #     - '*'
+    #   clusterResourceWhitelist:
+    #     - group: '*'
+    #       kind: '*'
+    #   namespaceResourceWhitelist:
+    #     - group: '*'
+    #       kind: '*'
+  applications:
+    - name: root-app
+      namespace: argocd
+      finalizers:
+      - resources-finalizer.argocd.argoproj.io
+      project: core
+      source:
+        # helm:
+        #   valueFiles:
+        #     - values.yaml
+        repoURL: https://github.com/kannancmohan/argohelm.git
+        targetRevision: HEAD
+        path: charts/root-app/
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: default
+      syncPolicy:
+        automated:
+          selfHeal: true
+    # - name: argocd
+    #   namespace: argocd
+    #   project: default
+    #   source:
+    #     helm:
+    #       valueFiles:
+    #         - values.yaml
+    #     repoURL: https://github.com/wallchristopher/k8s-platform.git
+    #     targetRevision: HEAD
+    #     path: bootstrap/argo
+    #   destination:
+    #     server: https://kubernetes.default.svc
+    #     namespace: argocd
+    #   syncPolicy:
+    #     automated:
+    #       selfHeal: true
+    #     managedNamespaceMetadata:
+    #       labels:
+    #         istio-injection: "enabled"
+    # - name: platform
+    #   namespace: argocd
+    #   project: core
+    #   source:
+    #     helm:
+    #       valueFiles:
+    #         - $values/bootstrap/base-values.yaml
+    #         - values.yaml
+    #     repoURL: "https://github.com/wallchristopher/k8s-platform.git"
+    #     targetRevision: HEAD
+    #     path: bootstrap/platform
+    #   destination:
+    #     server: https://kubernetes.default.svc
+    #     namespace: platform
+    #   syncPolicy:
+    #     automated:
+    #       selfHeal: true
+    #     syncOptions:
+    #       - CreateNamespace=true
+    #       - ServerSideApply=true
+    #     managedNamespaceMetadata:
+    #       labels:
+    #         istio-injection: "enabled"
+  # applicationsets:
+  # - name: addons
+  #   namespace: argocd
+  #   additionalLabels: {}
+  #   additionalAnnotations: {}
+  #   generators:
+  #   - list:
+  #       elements:
+  #       - name: thanos
+  #         namespace: thanos
+  #   template:
+  #     metadata:
+  #       name: '{{name}}'
+  #       labels:
+  #         project: '{{name}}'
+  #       annotations: {}
+  #     spec:
+  #       project: addons
+  #       source:
+  #         repoURL: https://github.com/wallchristopher/k8s-platform.git
+  #         targetRevision: HEAD
+  #         path: 'addons/{{name}}'
+  #         helm:
+  #           valueFiles:
+  #           - $values/bootstrap/base-values.yaml
+  #           - values.yaml
+  #       destination:
+  #         server: https://kubernetes.default.svc
+  #         namespace: '{{namespace}}'
+  #       syncPolicy:
+  #         automated:
+  #           selfHeal: true
+  #           prune: true
+  #         managedNamespaceMetadata:
+  #           labels:
+  #             istio-injection: "enabled"
+  #         syncOptions:
+  #         - CreateNamespace=true
+  #         - ServerSideApply=true
+  #   syncPolicy:
+  #     preserveResourcesOnDeletion: false

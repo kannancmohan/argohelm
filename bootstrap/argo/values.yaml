@@ -8,6 +8,11 @@ argo-cd:
   server:
     extraArgs:
       - --insecure
+    ingress:
+      enabled: true
+      ingressClassName: "traefik"
+    config:
+      url: http://localhost:8085
   # configs:
   #   repositories:
   #     k8s-platform:

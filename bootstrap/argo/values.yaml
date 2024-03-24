@@ -11,8 +11,11 @@ argo-cd:
     ingress:
       enabled: true
       ingressClassName: "traefik"
-    config:
-      url: http://localhost:8085
+      hosts:
+        - host: argo.k3s.local
+          paths:
+            - path: "/"
+              pathType: Prefix
   # configs:
   #   repositories:
   #     k8s-platform:

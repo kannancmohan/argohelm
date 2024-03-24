@@ -1,0 +1,81 @@
+argo-cd:
+  dex:
+    enabled: false
+  notifications:
+    enabled: false
+  applicationSet:
+    enabled: false
+  server:
+    extraArgs:
+      - --insecure
+  # configs:
+  #   repositories:
+  #     k8s-platform:
+  #       name: k8s-platform
+  #       type: git
+  #       url: https://github.com/kannancmohan/argohelm.git
+  #     argo-helm:
+  #       name: argo-helm
+  #       type: helm
+  #       url: https://argoproj.github.io/argo-helm
+  #   timeout.reconciliation: 120s
+argocd-apps:
+  projects:
+    - name: core
+      # finalizers:
+      # - resources-finalizer.argocd.argoproj.io
+      # additionalAnnotations: {helm.sh/hook: "post-install"}
+      description: Contains applications that are always deployed.
+      destinations:
+        - namespace: '*'
+          server: '*'
+      sourceRepos:
+        - '*'
+      clusterResourceWhitelist:
+        - group: '*'
+          kind: '*'
+      namespaceResourceWhitelist:
+        - group: '*'
+          kind: '*'
+  applications:
+    - name: argocd
+      namespace: argocd
+      project: default
+      source:
+        helm:
+          valueFiles:
+            - values.yaml
+        repoURL: https://github.com/kannancmohan/argohelm.git
+        targetRevision: HEAD
+        path: bootstrap/argo
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: argocd
+      syncPolicy:
+        automated:
+          selfHeal: true
+        # managedNamespaceMetadata:
+        #   labels:
+        #     istio-injection: "enabled"
+    - name: platform
+      namespace: argocd
+      project: core
+      source:
+        helm:
+          valueFiles:
+            - values.yaml
+        repoURL: https://github.com/kannancmohan/argohelm.git
+        targetRevision: HEAD
+        path: bootstrap/platform
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: platform
+      syncPolicy:
+        automated:
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+          - ServerSideApply=true
+        # managedNamespaceMetadata:
+        #   labels:
+        #     istio-injection: "enabled"

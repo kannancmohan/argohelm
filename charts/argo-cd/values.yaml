@@ -13,7 +13,7 @@ argocd-apps:
     - name: core
       # finalizers:
       # - resources-finalizer.argocd.argoproj.io
-      additionalAnnotations: {helm.sh/hook: "post-install"}
+      # additionalAnnotations: {helm.sh/hook: "post-install"}
       description: Contains applications that are always deployed.
       destinations:
         - namespace: '*'
@@ -32,7 +32,7 @@ argocd-apps:
       # finalizers:
       # - resources-finalizer.argocd.argoproj.io
       project: core
-      additionalAnnotations: {helm.sh/hook: "post-install"}
+      # additionalAnnotations: {helm.sh/hook: "post-install"}
       source:
         helm:
           valueFiles:

@@ -73,9 +73,6 @@ argocd-apps:
       syncPolicy:
         automated:
           selfHeal: true
-        # managedNamespaceMetadata:
-        #   labels:
-        #     istio-injection: "enabled"
     - name: platform
       namespace: argocd
       project: core
@@ -95,6 +92,3 @@ argocd-apps:
         syncOptions:
           - CreateNamespace=true
           - ServerSideApply=true
-        # managedNamespaceMetadata:
-        #   labels:
-        #     istio-injection: "enabled"

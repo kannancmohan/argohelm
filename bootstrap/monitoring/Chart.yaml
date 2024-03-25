@@ -1,6 +1,6 @@
 apiVersion: v2
 name: monitoring
-description: A helm chart that pulls in the kube-prometheus-stack
+description: A helm chart for kube-prometheus-stack
 type: application
 version: 0.0.1
 

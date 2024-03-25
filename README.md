@@ -9,3 +9,8 @@ helm upgrade argocd ./bootstrap/argo/ --namespace argocd  --dependency-update -f
 ```
 helm diff  upgrade argocd ./bootstrap/argo/ -n argocd  -f ./bootstrap/argo/values.yaml --set argo-cd.configs.secret.argocdServerAdminPassword=$ARGOCD_ADMIN_PWD
 ```
+
+### traefik dashboard
+```
+kubectl --namespace kube-system port-forward deployments/traefik 9000:9000
+```

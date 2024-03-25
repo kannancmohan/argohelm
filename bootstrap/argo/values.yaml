@@ -6,16 +6,26 @@ argo-cd:
   applicationSet:
     enabled: false
   server:
-    extraArgs:
-      - --insecure
     ingress:
       enabled: true
-      ingressClassName: "traefik"
-      hosts:
-        - host: argo.k3s.local
-          paths:
-            - path: "/"
-              pathType: Prefix
+      annotations: 
+        kubernetes.io/ingress.class: "nginx"
+        nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+        nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+        nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+      hostname: argocd.k3s.local
+      path: /
+      pathType: Prefix
+    # extraArgs:
+    #   - --insecure
+    # ingress:
+    #   enabled: true
+    #   ingressClassName: "traefik"
+    #   hosts:
+    #     - host: argo.k3s.local
+    #       paths:
+    #         - path: "/"
+    #           pathType: Prefix
   # configs:
   #   repositories:
   #     k8s-platform:

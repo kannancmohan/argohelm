@@ -14,3 +14,7 @@ helm diff  upgrade argocd ./bootstrap/argo/ -n argocd  -f ./bootstrap/argo/value
 ```
 kubectl --namespace kube-system port-forward deployments/traefik 9000:9000
 ```
+### argocd 
+```
+kubectl -n argocd port-forward svc/argocd-server 8080:443
+```
